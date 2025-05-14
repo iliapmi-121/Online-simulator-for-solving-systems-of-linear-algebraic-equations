@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Линейный гений</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Roboto:wght@400;700&family=Roboto+Mono&display=swap');
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.container {
+    width: 100%;
+    max-width: 1400px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    animation: fadeIn 1s ease-out;
+    display: flex;
+}
+.sidebar {
+    width: 250px;
+    margin-right: 30px;
+    padding: 20px;
+}
+.main-content {
+    flex-grow: 1;
+}
+h1, h2 {
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #ffdd57;
+    text-shadow: 0 0 10px rgba(255, 221, 87, 0.7);
+    animation: slideDown 1s ease-out;
+}
+section {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    transition: transform 0.3s, background 0.3s;
+}
+section:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+}
+label {
+    display: block;
+    margin: 15px 0 8px;
+    font-size: 1.1em;
+    color: #000;
+    background: #ffdd57;
+    padding: 5px 10px;
+    border-radius: 5px;
+    animation: fadeIn 1s ease-in;
+}
+select, input[type="number"], input[type="text"] {
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    color: #000;
+    font-size: 1em;
+    transition: background 0.3s, transform 0.3s;
+    outline: none;
+}
+select.operator {
+    width: 100px;
+    color: #000;
+    background: #fff;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+select.operator option {
+    color: #000;
+    background: #fff;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+select:hover, input[type="number"]:hover, input[type="text"]:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.02);
+}
+button {
+    padding: 12px 25px;
+    background: #ffdd57;
+    border: none;
+    border-radius: 25px;
+    color: #1f1c2c;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+button:hover {
+    background: #e0c14b;
+    transform: scale(1.05);
+}
+.navigation-buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+.navigation-buttons button {
+    margin: 0 10px;
+}
+.equation-row, .matrix-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 5px;
+    animation: fadeIn 1s ease-in;
+}
+.equation-row input[type="number"], .matrix-row input[type="number"] {
+    width: 60px;
+    padding: 8px;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.8);
+    color: #000;
+    transition: background 0.3s, transform 0.3s;
+    outline: none;
+}
+.equation-row input[type="number"]:hover, .matrix-row input[type="number"]:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.05);
+}
+.equation-row span, .matrix-row span {
+    font-size: 1em;
+    color: #ffdd57;
+    text-shadow: 0 0 5px rgba(255, 221, 87, 0.7);
+}
+.step {
+    background: rgba(31, 38, 135, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    animation: fadeIn 1s ease-in;
+    transition: transform 0.3s;
+}
+.step:hover {
+    transform: scale(1.02);
+}
+.step h3 {
+    margin-bottom: 15px;
+    color: #ff4081;
+    text-shadow: 0 0 10px rgba(255, 64, 129, 0.7);
+    animation: fadeInUp 1s ease-out;
+}
+.history {
+    max-height: 250px;
+    overflow-y: auto;
+    background: rgba(31, 38, 135, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    animation: fadeIn 1s ease-in;
+}
+.history-item {
+    padding: 10px;
+    border-bottom: 1px solid #ffdd57;
+    animation: fadeIn 1s ease-in;
+    cursor: pointer;
+}
+.history-item:last-child {
+    border-bottom: none;
+}
+#literature-modal .modal-body a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+#literature-modal .modal-body a:hover {
+    color: #e0c14b;
+}
+.clear-history {
+    background: #ff5252;
+    margin-top: 15px;
+    transition: background 0.3s, transform 0.3s;
+}
+.clear-history:hover {
+    background: #ff1744;
+    transform: scale(1.05);
+}
+.matrix {
+    font-family: 'Roboto Mono', monospace;
+    white-space: pre;
+    color: #ffdd57;
+    text-shadow: 0 0 5px rgba(255, 221, 87, 0.7);
+}
+.input-error {
+    border-color: red !important;
+    background-color: #ffcccc !important;
+}
+.input-correct {
+    border-color: green !important;
+    background-color: #ccffcc !important;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    max-width: 600px;
+    width: 100%;
+    animation: fadeIn 0.5s ease-out;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.modal-header h2 {
+    margin: 0;
+}
+.modal-header button {
+    background: none;
+    border: none;
+    color: #ffdd57;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+.modal-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.sidebar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.sidebar-links a {
+    color: #ffdd57;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: color 0.3s, transform 0.3s;
+    padding: 10px;
+    border-radius: 5px;
+}
+.sidebar-links a:hover {
+    color: #e0c14b;
+    transform: scale(1.05);
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    .equation-row, .matrix-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    button {
+        width: 100%;
+        text-align: center;
+    }
+    .navigation-buttons button {
+        width: 45%;
+        margin: 10px 2.5%;
+    }
+    .operator {
+        width: 80px;
+    }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mathjs@11.3.0/lib/browser/math.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar">
+        <div class="sidebar-links">
+            <a href="#" onclick="openModal('instruction-modal')">Инструкция использования</a>
+            <a href="https://rutube.ru/video/8f83a512de3ffe82bff2b684b714b122/" target="_blank">Обучающее видео</a>
+            <a href="#" onclick="openModal('literature-modal')">Список литературы</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <h1>Линейный гений</h1>
+        <section>
+            <h2>Калькулятор</h2>
+            <label>Количество уравнений:</label>
+            <select id="equations-count">
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+            </select>
+            <label>Количество переменных:</label>
+            <select id="variables-count">
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+            </select>
+            <label>Метод решения:</label>
+            <select id="method">
+                <option value="substitution">Метод подстановки</option>
+                <option value="addition">Метод сложения</option>
+                <option value="matrix">Матричный метод</option>
+                <option value="gauss">Метод Гаусса</option>
+                <option value="kramer">Метод Крамера</option>
+                <option value="lu">LU-разложение</option>
+                <option value="minimization">Минимизация</option>
+            </select>
+            <div id="equations"></div>
+            <button id="solve-button">Решить</button>
+            <h2>Пошаговое решение с объяснением:</h2>
+            <div id="steps"></div>
+        </section>
+        <section>
+            <h2>Тренажер для обучения</h2>
+            <label>Количество уравнений:</label>
+            <select id="trainer-equations-count">
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+            </select>
+            <label>Количество переменных:</label>
+            <select id="trainer-variables-count">
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+                <option value="25">25</option>
+                <option value="26">26</option>
+                <option value="27">27</option>
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+            </select>
+            <label>Метод решения:</label>
+            <select id="trainer-method">
+                <option value="substitution">Метод подстановки</option>
+                <option value="addition">Метод сложения</option>
+                <option value="matrix">Матричный метод</option>
+                <option value="gauss">Метод Гаусса</option>
+                <option value="kramer">Метод Крамера</option>
+                <option value="lu">LU-разложение</option>
+                <option value="minimization">Минимизация</option>
+            </select>
+            <div id="trainer-equations"></div>
+            <button id="start-trainer-button">Начать решать</button>
+            <button id="generate-system-button">Сгенерировать систему</button>
+            <div id="trainer-steps"></div>
+            <div class="navigation-buttons">
+                <button id="prev-step-button">Предыдущий шаг</button>
+                <button id="next-step-button">Следующий шаг</button>
+            </div>
+        </section>
+        <section>
+            <h2>История примеров</h2>
+            <div class="history" id="history"></div>
+            <button class="clear-history" id="clear-history-button">Очистить историю</button>
+        </section>
+    </div>
+</div>
+
+<div id="instruction-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Инструкция использования</h2>
+            <button onclick="closeModal('instruction-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p><strong>Использование калькулятора для решения систем линейных алгебраических уравнений:</strong></p>
+            <ol>
+                <li>Выберите количество уравнений и количество переменных.</li>
+                <li>Выберите метод решения.</li>
+                <li>В сгенерированной форме:
+                    <ul>
+                        <li>Выберите знаки математических операций.</li>
+                        <li>Заполните систему числами.</li>
+                    </ul>
+                </li>
+                <li>Нажмите кнопку «Решить».</li>
+                <li>Получите решённую систему уравнений с объяснением каждого шага.</li>
+            </ol>
+            <p><strong>Использование тренажера для обучения:</strong></p>
+            <ol>
+                <li>Выберите количество уравнений и количество переменных.</li>
+                <li>Выберите метод решения.</li>
+                <li>В сгенерированной форме:
+                    <ul>
+                        <li>Выберите знаки математических операций.</li>
+                        <li>Заполните систему числами.</li>
+                    </ul>
+                </li>
+                <li>Нажмите кнопку «Начать решать».</li>
+                <li>Заполните форму решения для шага с определённым номером.</li>
+                <li>Если будет допущена ошибка, сервис:
+                    <ul>
+                        <li>Уведомит об этом.</li>
+                        <li>Выделит место ошибки.</li>
+                    </ul>
+                </li>
+                <li>Если шаг решён правильно, сервис уведомит о верном решении.</li>
+                <li>Для анализа решения можно переключаться между шагами с помощью кнопок «Предыдущий шаг» и «Следующий шаг».</li>
+            </ol>
+            <p><strong>Просмотр истории примеров:</strong></p>
+            <p>Если необходимо вспомнить или просмотреть ранее решаемые примеры:</p>
+            <ol>
+                <li>Обратитесь к истории примеров с которой можно взаимодействовать.</li>
+                <li>В истории указаны методы решения и ранее вводимые системы уравнений.</li>
+            </ol>
+            <p><strong>Дополнительные материалы:</strong></p>
+            <p>Если возникли сложности или нужно углубиться в изучение:</p>
+            <ol>
+                <li>Обратитесь к обучающему видео.</li>
+                <li>Используйте предложенную литературу из списка для лучшего понимания и углублённого обучения.</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<div id="literature-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Список литературы</h2>
+            <button onclick="closeModal('literature-modal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li><a href="http://repo.donnu.ru:8080/jspui/bitstream/123456789/5008/1/Бродский%20Я.%20%20С.%2C%20Павлов%20А.Л.%20Системы%20линейных%20уравнений.pdf" target="_blank">Системы линейных уравнений</a></li>
+                <li><a href="https://klgtu.ru/vikon/sveden/files/Matricy_i_sistemy_lineynyx_uravneniy_ucheb._posobie_dlya_studentov_2009.pdf" target="_blank">Матрицы и системы линейных уравнений</a></li>
+                <li><a href="https://elar.urfu.ru/bitstream/10995/78551/1/978-5-7996-2776-8_2019.pdf?ysclid=m5jgwetd7h102304868" target="_blank">Линейная алгебра</a></li>
+                <li><a href="http://minimax.school.udsu.ru/files/1327464270.pdf" target="_blank">Численные методы</a></li>
+                <li><a href="https://asu.tusur.ru/learning/090301/d24/090301-d24-lect.pdf" target="_blank">Методы оптимизации</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+let calculatorHistory = JSON.parse(localStorage.getItem('calculatorHistory')) || [];
+let trainerHistory = JSON.parse(localStorage.getItem('trainerHistory')) || [];
+
+function generateEquations(containerId, eqCountId, varCountId) {
+    let container = document.getElementById(containerId);
+    let eqCount = document.getElementById(eqCountId).value;
+    let varCount = document.getElementById(varCountId).value;
+    container.innerHTML = '';
+    for (let i = 0; i < eqCount; i++) {
+        let row = document.createElement('div');
+        row.className = 'equation-row';
+        let bracketLeft = document.createElement('span');
+        bracketLeft.textContent = '{';
+        row.appendChild(bracketLeft);
+        for (let j = 0; j < varCount; j++) {
+            let coefInput = document.createElement('input');
+            coefInput.type = 'number';
+            coefInput.value = 0;
+            coefInput.className = 'coef';
+            row.appendChild(coefInput);
+            let varLabel = document.createElement('span');
+            varLabel.textContent = 'x' + (j + 1);
+            row.appendChild(varLabel);
+            if (j < varCount - 1) {
+                let opSelect = document.createElement('select');
+                ['+', '-'].forEach(op => {
+                    let option = document.createElement('option');
+                    option.value = op;
+                    option.textContent = op;
+                    opSelect.appendChild(option);
+                });
+                opSelect.className = 'operator';
+                row.appendChild(opSelect);
+            }
+        }
+        let bracketRight = document.createElement('span');
+        bracketRight.textContent = '} = ';
+        row.appendChild(bracketRight);
+        let resultInput = document.createElement('input');
+        resultInput.type = 'number';
+        resultInput.value = 0;
+        resultInput.className = 'result';
+        row.appendChild(resultInput);
+        container.appendChild(row);
+    }
+}
+generateEquations('equations', 'equations-count', 'variables-count');
+document.getElementById('equations-count').addEventListener('change', () => {
+    generateEquations('equations', 'equations-count', 'variables-count');
+});
+document.getElementById('variables-count').addEventListener('change', () => {
+    generateEquations('equations', 'equations-count', 'variables-count');
+});
+function solveEquations(equations, method) {
+    let steps = [];
+    try {
+        // Преобразуем коэффициенты в числа, обрабатывая знаки
+        let parsedEquations = equations.map(eq => {
+            let parsedCoeffs = [];
+            for (let i = 0; i < eq.coeffs.length; i++) {
+                let coef = parseFloat(eq.coeffs[i]) || 0;
+                parsedCoeffs.push(coef);
+            }
+            return {coeffs: parsedCoeffs, result: eq.result};
+        });
+
+        if (method === 'gauss') {
+            steps = solveByGauss(parsedEquations);
+        } else if (method === 'kramer') {
+            steps = solveByKramer(parsedEquations);
+        } else if (method === 'lu') {
+            steps = solveByLU(parsedEquations);
+        } else if (method === 'minimization') {
+            steps = solveByMinimization(parsedEquations);
+        } else if (method === 'substitution') {
+            steps = solveBySubstitution(parsedEquations);
+        } else if (method === 'addition') {
+            steps = solveByAddition(parsedEquations);
+        } else if (method === 'matrix') {
+            steps = solveByMatrixMethod(parsedEquations);
+        }
+    } catch (error) {
+        steps.push({description: 'Ошибка при решении: ' + error.message});
+    }
+    return steps;
+}
+function solveByGauss(equations) {
+    let steps = [];
+    let n = equations.length;
+    let расширеннаяМатрица = [];
+
+    // Создание расширенной матрицы
+    for (let i = 0; i < n; i++) {
+        let row = equations[i].coeffs.slice();
+        row.push(equations[i].result);
+        расширеннаяМатрица.push(row);
+    }
+    steps.push({description: `Формируем расширенную матрицу из коэффициентов уравнений и свободных членов.`, matrix: JSON.parse(JSON.stringify(расширеннаяМатрица))});
+
+    // Прямой ход (приведение к верхнетреугольному виду)
+    for (let i = 0; i < n; i++) {
+        // Поиск максимального элемента в столбце i
+        let maxEl = Math.abs(расширеннаяМатрица[i][i]);
+        let maxRow = i;
+        for (let k = i + 1; k < n; k++) {
+            if (Math.abs(расширеннаяМатрица[k][i]) > maxEl) {
+                maxEl = Math.abs(расширеннаяМатрица[k][i]);
+                maxRow = k;
+            }
+        }
+
+        // Перестановка строк, если необходимо
+        if (maxRow !== i) {
+            let tmp = расширеннаяМатрица[i];
+            расширеннаяМатрица[i] = расширеннаяМатрица[maxRow];
+            расширеннаяМатрица[maxRow] = tmp;
+            steps.push({description: `Меняем местами строки ${i + 1} и ${maxRow + 1} для выбора максимального элемента в столбце.`, matrix: JSON.parse(JSON.stringify(расширеннаяМатрица))});
+        }
+
+        // Проверка на нулевой главный элемент
+        if (Math.abs(расширеннаяМатрица[i][i]) < 1e-10) {
+            steps.push({description: `Система не имеет единственного решения (нулевой главный элемент).`});
+            return steps;
+        }
+
+        // Обнуление элементов ниже главного элемента
+        for (let k = i + 1; k < n; k++) {
+            let c = -расширеннаяМатрица[k][i] / расширеннаяМатрица[i][i];
+            steps.push({description: `Вычисляем коэффициент c = - (${расширеннаяМатрица[k][i].toFixed(4)}) / (${расширеннаяМатрица[i][i].toFixed(4)}) = ${c.toFixed(4)}.`, matrix: JSON.parse(JSON.stringify(расширеннаяМатрица))});
+
+            for (let j = i; j < n + 1; j++) {
+                if (i === j) {
+                    расширеннаяМатрица[k][j] = 0;
+                    steps.push({description: `Обнуляем элемент матрицы в строке ${k + 1}, столбце ${j + 1}.`, matrix: JSON.parse(JSON.stringify(расширеннаяМатрица))});
+                } else {
+                    расширеннаяМатрица[k][j] += c * расширеннаяМатрица[i][j];
+                    steps.push({description: `Вычитаем из строки ${k + 1} строку ${i + 1}, умноженную на коэффициент c: элемент матрицы в строке ${k + 1}, столбце ${j + 1} = ${расширеннаяМатрица[k][j].toFixed(4)}.`, matrix: JSON.parse(JSON.stringify(расширеннаяМатрица))});
+                }
+            }
+        }
+        steps.push({description: `Завершили обнуление элементов ниже главной диагонали в столбце ${i + 1}.`, matrix: JSON.parse(JSON.stringify(расширеннаяМатрица))});
+    }
+
+    // Обратный ход (вычисление решения)
+    let x = new Array(n);
+    for (let i = n - 1; i >= 0; i--) {
+        x[i] = расширеннаяМатрица[i][n];
+        steps.push({description: `Вычисляем значение x[${i + 1}] = ${x[i].toFixed(4)}.`, matrix: JSON.parse(JSON.stringify(расширеннаяМатрица))});
+        for (let j = i + 1; j < n; j++) {
+            x[i] -= расширеннаяМатрица[i][j] * x[j];
+            steps.push({description: `Учитываем известные значения x[${j + 1}]: x[${i + 1}] = ${x[i].toFixed(4)}.`, matrix: JSON.parse(JSON.stringify(расширеннаяМатрица))});
+        }
+        x[i] /= расширеннаяМатрица[i][i];
+        steps.push({description: `Делим на главный элемент: x[${i + 1}] = ${x[i].toFixed(4)}.`, matrix: JSON.parse(JSON.stringify(расширеннаяМатрица))});
+    }
+
+    steps.push({description: `Решение системы:`, solution: x});
+    return steps;
+}
+function solveByKramer(equations) {
+    let steps = [];
+    let n = equations.length;
+    let матрицаКоэффициентов = equations.map(eq => eq.coeffs);
+    let векторСвободныхЧленов = equations.map(eq => eq.result);
+    let stepCounter = 1;
+
+    if (матрицаКоэффициентов.length !== матрицаКоэффициентов[0].length) {
+        steps.push({description: `Матрица коэффициентов должна быть квадратной для применения метода Крамера.`});
+        return steps;
+    }
+
+    steps.push({description: `Записываем матрицу коэффициентов:`, matrix: матрицаКоэффициентов});
+
+    // Форматирование вектора b в виде матрицы в столбик
+    let векторСвободныхЧленовМатрица = векторСвободныхЧленов.map(value => [value]);
+    steps.push({description: `Записываем вектор свободных членов:`, matrix: векторСвободныхЧленовМатрица});
+
+    let главныйОпределитель = math.det(матрицаКоэффициентов);
+    steps.push({description: `Вычисляем главный определитель D матрицы коэффициентов: ${главныйОпределитель.toFixed(4)}`});
+
+    if (Math.abs(главныйОпределитель) < 1e-10) {
+        steps.push({description: `Система не имеет единственного решения, так как главный определитель равен нулю (D = 0).`});
+        return steps;
+    }
+
+    let решения = [];
+    for (let i = 0; i < n; i++) {
+        let вспомогательнаяМатрица = матрицаКоэффициентов.map(row => row.slice()); // Создаем копию матрицы
+        for (let j = 0; j < n; j++) {
+            вспомогательнаяМатрица[j][i] = векторСвободныхЧленов[j]; // Заменяем i-й столбец
+        }
+
+        steps.push({description: `Заменяем ${i + 1}-й столбец матрицы коэффициентов вектором свободных членов. Получаем матрицу D${i + 1}:`, matrix: вспомогательнаяМатрица});
+
+        let определительВспомогательнойМатрицы = math.det(вспомогательнаяМатрица);
+        steps.push({description: `Вычисляем определитель матрицы D${i + 1}: ${определительВспомогательнойМатрицы.toFixed(4)}`});
+
+        решения.push(определительВспомогательнойМатрицы / главныйОпределитель);
+        steps.push({description: `Вычисляем x${i + 1} = D${i + 1} / D = ${ (определительВспомогательнойМатрицы / главныйОпределитель).toFixed(4)}`});
+    }
+
+    steps.push({description: `Решение системы уравнений:`, solution: решения});
+    return steps;
+}
+function solveByLU(equations) {
+    let steps = [];
+    let A = equations.map(eq => eq.coeffs);
+    let b = equations.map(eq => eq.result);
+    let stepCounter = 1;
+
+    steps.push({description: 'Матрица коэффициентов A:', matrix: A});
+
+    // Форматирование вектора b в виде матрицы в столбик
+    let bMatrix = b.map(value => [value]);
+    steps.push({description: 'Вектор свободных членов b:', matrix: bMatrix});
+
+    try {
+        let {L, U} = luDecomposition(A, steps);
+        steps.push({description: 'Матрица нижнего треугольника L:', matrix: L});
+        steps.push({description: 'Матрица верхнего треугольника U:', matrix: U});
+
+        steps.push({description: 'Решаем систему Ly = b с помощью прямой подстановки'});
+        let y = forwardSubstitution(L, b, steps);
+
+        // Форматирование вектора y в виде матрицы в столбик без квадратных скобок
+        steps.push({description: 'Вектор y:', matrix: y.map(value => [value])});
+
+        steps.push({description: 'Решаем систему Ux = y с помощью обратной подстановки'});
+        let x = backSubstitution(U, y, steps);
+        steps.push({description: 'Решение системы:', solution: x});
+
+        return steps;
+    } catch (error) {
+        steps.push({description: 'Ошибка при LU-разложении: ' + error.message});
+        return steps;
+    }
+}
+
+function luDecomposition(A, steps) {
+    let n = A.length;
+    let L = math.zeros(n, n)._data;
+    let U = math.zeros(n, n)._data;
+
+    steps.push({description: 'Начинаем LU-разложение'});
+
+    for (let i = 0; i < n; i++) {
+        for (let k = i; k < n; k++) {
+            let sum = 0;
+            for (let j = 0; j < i; j++) {
+                sum += L[i][j] * U[j][k];
+            }
+            U[i][k] = A[i][k] - sum;
+            steps.push({description: `Вычисляем U[${i + 1}][${k + 1}] = A[${i + 1}][${k + 1}] - (L[${i + 1}][0] * U[0][${k + 1}] + ... + L[${i + 1}][${i}] * U[${i}][${k + 1}]) = ${U[i][k].toFixed(4)}`});
+        }
+
+        if (U[i][i] === 0) {
+            throw new Error('Нулевой элемент на диагонали, LU-разложение невозможно без перестановок');
+        }
+
+        for (let k = i; k < n; k++) {
+            if (i === k) {
+                L[i][i] = 1;
+                steps.push({description: `Устанавливаем L[${i + 1}][${i + 1}] = 1`});
+            } else {
+                let sum = 0;
+                for (let j = 0; j < i; j++) {
+                    sum += L[k][j] * U[j][i];
+                }
+                L[k][i] = (A[k][i] - sum) / U[i][i];
+                steps.push({description: `Вычисляем L[${k + 1}][${i + 1}] = (A[${k + 1}][${i + 1}] - (L[${k + 1}][0] * U[0][${i + 1}] + ... + L[${k + 1}][${i}] * U[${i}][${i + 1}])) / U[${i + 1}][${i + 1}] = ${L[k][i].toFixed(4)}`});
+            }
+        }
+    }
+
+    return {L, U};
+}
+
+function forwardSubstitution(L, b, steps) {
+    let n = L.length;
+    let y = [];
+
+    steps.push({description: 'Решаем Ly = b'});
+
+    for (let i = 0; i < n; i++) {
+        let sum = 0;
+        for (let j = 0; j < i; j++) {
+            sum += L[i][j] * y[j];
+        }
+        y[i] = b[i] - sum;
+        steps.push({description: `Вычисляем y[${i + 1}] = b[${i + 1}] - (L[${i + 1}][0] * y[0] + ... + L[${i + 1}][${i}] * y[${i}]) = ${y[i].toFixed(4)}`});
+    }
+
+    return y;
+}
+
+function backSubstitution(U, y, steps) {
+    let n = U.length;
+    let x = [];
+
+    steps.push({description: 'Решаем Ux = y'});
+
+    for (let i = n - 1; i >= 0; i--) {
+        let sum = 0;
+        for (let j = i + 1; j < n; j++) {
+            sum += U[i][j] * x[j];
+        }
+        x[i] = (y[i] - sum) / U[i][i];
+        steps.push({description: `Вычисляем x[${i + 1}] = (y[${i + 1}] - (U[${i + 1}][${i + 2}] * x[${i + 2}] + ... + U[${i + 1}][${n}] * x[${n}])) / U[${i + 1}][${i + 1}] = ${x[i].toFixed(4)}`});
+    }
+
+    return x;
+}
+function solveByMinimization(equations) {
+    let steps = [];
+    let A = equations.map(eq => eq.coeffs);
+    let b = equations.map(eq => eq.result);
+
+    const numEquations = A.length;
+    const numVariables = (A.length > 0) ? A[0].length : 0;
+
+    // Проверка на совместимость размеров
+    if (b.length !== numEquations) {
+        steps.push({description: `Ошибка: Несовместимое количество уравнений и свободных членов. Количество уравнений: ${numEquations}, количество свободных членов: ${b.length}. Решение невозможно.`});
+        return {steps: steps, solution: []};
+    }
+
+    if (A.some(row => row.length !== numVariables)) {
+        steps.push({description: `Ошибка: Не все уравнения имеют одинаковое количество переменных. Решение невозможно.`});
+        return {steps: steps, solution: []};
+    }
+
+    steps.push({description: `Записываем матрицу коэффициентов A:`, matrix: A});
+
+    // Вывод вектора b в столбик
+    let векторСвободныхЧленовВСтолбец = b.map(val => [val]);
+    steps.push({
+        description: `Записываем вектор свободных членов b в виде столбца:`,
+        matrix: векторСвободныхЧленовВСтолбец
+    });
+
+    let At = math.transpose(A);
+    steps.push({description: `Транспонируем матрицу A.  Это необходимо для дальнейшего вычисления псевдообратной матрицы. Получаем матрицу A^T:`, matrix: At});
+
+    let AtA = math.multiply(At, A);
+    steps.push({description: `Умножаем A^T на A.  Это необходимо для дальнейшего вычисления псевдообратной матрицы. Получаем матрицу A^T * A:`, matrix: AtA});
+
+    // Преобразуем b в матрицу-столбец перед умножением
+    let bColumn = b.map(val => [val]);
+    let Atb = math.multiply(At, bColumn);
+
+    // Вывод вектора Atb
+    steps.push({
+        description: `Умножаем A^T на b. Это необходимо для вычисления решения системы линейных уравнений методом наименьших квадратов. Получаем вектор A^T * b:`,
+        matrix: Atb
+    });
+
+    steps.push({description: `Решаем систему (A^T * A) * x = A^T * b методом Гаусса.  Это позволит найти вектор x, минимизирующий невязку ||Ax - b||.`});
+
+    // Создаем расширенную матрицу
+    let расширеннаяМатрица = [];
+    for (let i = 0; i < AtA.length; i++) {
+        let row = AtA[i].concat(Atb[i]);
+        расширеннаяМатрица.push(row);
+    }
+
+    let gaussResult = gaussElimination(расширеннаяМатрица);
+    steps = steps.concat(gaussResult.steps);
+    let x = gaussResult.solution;
+
+    steps.push({description: `Найдено решение системы:`, solution: x});
+
+    return steps;
+}
+
+function gaussElimination(augmentedMatrix) {
+    let steps = [];
+    let n = augmentedMatrix.length;
+
+    for (let i = 0; i < n; i++) {
+        // Поиск максимального элемента в столбце i
+        let maxEl = Math.abs(augmentedMatrix[i][i]);
+        let maxRow = i;
+        for (let k = i + 1; k < n; k++) {
+            if (Math.abs(augmentedMatrix[k][i]) > maxEl) {
+                maxEl = Math.abs(augmentedMatrix[k][i]);
+                maxRow = k;
+            }
+        }
+
+        // Перестановка строк, если необходимо
+        if (maxRow !== i) {
+            let tmp = augmentedMatrix[i];
+            augmentedMatrix[i] = augmentedMatrix[maxRow];
+            augmentedMatrix[maxRow] = tmp;
+            steps.push({description: `Меняем местами строки ${i + 1} и ${maxRow + 1} для выбора максимального элемента в столбце, чтобы повысить численную устойчивость алгоритма.`, matrix: JSON.parse(JSON.stringify(augmentedMatrix))});
+        }
+
+        // Проверка на нулевой главный элемент
+        if (Math.abs(augmentedMatrix[i][i]) < 1e-10) {
+            steps.push({description: `Система не имеет единственного решения (нулевой главный элемент).`});
+            return {steps: steps, solution: []};
+        }
+
+        // Обнуление элементов ниже главного элемента
+        for (let k = i + 1; k < n; k++) {
+            let c = -augmentedMatrix[k][i] / augmentedMatrix[i][i];
+            steps.push({description: `Вычисляем коэффициент c = - (${augmentedMatrix[k][i].toFixed(4)}) / (${augmentedMatrix[i][i].toFixed(4)}) = ${c.toFixed(4)}. Этот коэффициент используется для обнуления элементов ниже главного элемента в столбце.`, matrix: JSON.parse(JSON.stringify(augmentedMatrix))});
+
+            for (let j = i; j < n + 1; j++) {
+                augmentedMatrix[k][j] += c * augmentedMatrix[i][j];
+                steps.push({description: `Вычитаем из строки ${k + 1} строку ${i + 1}, умноженную на коэффициент c: элемент матрицы в строке ${k + 1}, столбце ${j + 1} = ${augmentedMatrix[k][j].toFixed(4)}.`, matrix: JSON.parse(JSON.stringify(augmentedMatrix))});
+            }
+        }
+        steps.push({description: `Завершили обнуление элементов ниже главной диагонали в столбце ${i + 1}.`, matrix: JSON.parse(JSON.stringify(augmentedMatrix))});
+    }
+
+     // Обратный ход
+    let x = new Array(n);
+    for (let i = n - 1; i >= 0; i--) {
+        x[i] = augmentedMatrix[i][n];
+        for (let j = i + 1; j < n; j++) {
+            x[i] -= augmentedMatrix[i][j] * x[j];
+        }
+        x[i] /= augmentedMatrix[i][i];
+    }
+
+    return {steps: steps, solution: x};
+}
+
+function solveBySubstitution(equations) {
+    let steps = [];
+    let n = equations.length;
+    let матрица = [];
+    let stepCounter = 1;
+
+    // Преобразование уравнений в расширенную матрицу
+    for (let i = 0; i < n; i++) {
+        let строка = equations[i].coeffs.slice();
+        строка.push(equations[i].result);
+        матрица.push(строка);
+    }
+    steps.push({description: 'Преобразуем систему уравнений в расширенную матрицу:', matrix: JSON.parse(JSON.stringify(матрица))});
+
+    // Прямой ход (Гауссов метод)
+    for (let i = 0; i < n; i++) {
+        // Проверка на деление на ноль
+        if (Math.abs(матрица[i][i]) < 1e-10) {
+            steps.push({description: 'Система не имеет единственного решения из-за нулевого главного элемента.'});
+            return steps;
+        }
+
+        steps.push({description: `Выбираем ведущий элемент: матрица[${i + 1}][${i + 1}] = ${матрица[i][i].toFixed(4)}`});
+
+        for (let j = i + 1; j < n; j++) {
+            let коэффициент = матрица[j][i] / матрица[i][i];
+            steps.push({description: `Вычисляем коэффициент: коэффициент = матрица[${j + 1}][${i + 1}] / матрица[${i + 1}][${i + 1}] = ${коэффициент.toFixed(4)}`});
+
+            for (let k = i; k <= n; k++) {
+                матрица[j][k] -= коэффициент * матрица[i][k];
+                steps.push({description: `Преобразуем элемент: матрица[${j + 1}][${k + 1}] = матрица[${j + 1}][${k + 1}] - коэффициент * матрица[${i + 1}][${k + 1}] = ${матрица[j][k].toFixed(4)}`});
+            }
+        }
+        steps.push({description: `Приводим матрицу к ступенчатому виду, исключая переменную в ${i + 1}-м столбце.`, matrix: JSON.parse(JSON.stringify(матрица))});
+    }
+
+    let x = new Array(n);
+
+    // Обратная подстановка
+    for (let i = n - 1; i >= 0; i--) {
+        x[i] = матрица[i][n];
+        steps.push({description: `Начинаем обратную подстановку: x[${i + 1}] = матрица[${i + 1}][${n + 1}] = ${x[i].toFixed(4)}`});
+        for (let j = i + 1; j < n; j++) {
+            x[i] -= матрица[i][j] * x[j];
+            steps.push({description: `Учитываем известные значения x[${j + 1}]: x[${i + 1}] = x[${i + 1}] - матрица[${i + 1}][${j + 1}] * x[${j + 1}] = ${x[i].toFixed(4)}`});
+        }
+        x[i] /= матрица[i][i];
+        steps.push({description: `Вычисляем x[${i + 1}] = (x[${i + 1}] - (матрица[${i + 1}][${i + 2}] * x[${i + 2}] + ...)) / матрица[${i + 1}][${i + 1}] = ${x[i].toFixed(4)}`});
+    }
+
+    steps.push({description: 'Найдено решение системы уравнений:', solution: x});
+    return steps;
+}
+function solveByAddition(equations) {
+    let steps = [];
+    let n = equations.length;
+   let матрицаКоэффициентов = equations.map(eq => eq.coeffs);
+    let векторСвободныхЧленов = equations.map(eq => eq.result);
+    let stepCounter = 1;
+
+   //  Создаем расширенную матрицу
+    let расширеннаяМатрица = матрицаКоэффициентов.map((row, i) => {
+        return [...row, векторСвободныхЧленов[i]]; //  Добавляем свободный член в конец строки
+    });
+
+    steps.push({description: `Начальная расширенная матрица A:`, matrix: расширеннаяМатрица});
+
+    // Вывод вектора b в столбик
+    let векторСвободныхЧленовВСтолбец = векторСвободныхЧленов.map(val => [val]);
+    steps.push({
+        description: `Записываем вектор свободных членов b в виде столбца:`,
+        matrix: векторСвободныхЧленовВСтолбец
+    });
+
+    // Прямой ход
+    for (let i = 0; i < n; i++) {
+        if (матрицаКоэффициентов[i][i] === 0) {
+            throw new Error('Деление на ноль: матрица не имеет единственного решения');
+        }
+         steps.push({description: `Выбираем главный элемент: A[${i + 1}][${i + 1}] = ${матрицаКоэффициентов[i][i].toFixed(4)}`});
+
+        for (let j = i + 1; j < n; j++) {
+            let коэффициент = матрицаКоэффициентов[j][i] / матрицаКоэффициентов[i][i];
+            steps.push({description: `Вычисляем коэффициент = A[${j + 1}][${i + 1}] / A[${i + 1}][${i + 1}] = ${коэффициент.toFixed(4)}`});
+            for (let k = i; k < n; k++) {
+                матрицаКоэффициентов[j][k] -= коэффициент * матрицаКоэффициентов[i][k];
+                  steps.push({description: `Вычитаем из элемента A[${j + 1}][${k + 1}] элемент A[${i + 1}][${k + 1}], умноженный на коэффициент: A[${j + 1}][${k + 1}] = ${матрицаКоэффициентов[j][k].toFixed(4)}`});
+            }
+            векторСвободныхЧленов[j] -= коэффициент * векторСвободныхЧленов[i];
+            steps.push({description: `Вычитаем из b[${j + 1}] элемент b[${i + 1}], умноженный на коэффициент: b[${j + 1}] = ${векторСвободныхЧленов[j].toFixed(4)}`});
+        }
+    }
+
+    steps.push({description: 'Преобразуем матрицу сложением строк:', matrix: матрицаКоэффициентов});
+    // Вывод вектора b после сложения строк в столбик
+    let векторПослеСложенияСтрок = векторСвободныхЧленов.map(val => [val]);
+    steps.push({
+        description: 'Преобразуем вектор свободных членов сложением строк:',
+        matrix: векторПослеСложенияСтрок
+    });
+
+    let x = new Array(n);
+
+    // Обратный ход
+    for (let i = n - 1; i >= 0; i--) {
+        x[i] = векторСвободныхЧленов[i];
+         steps.push({description: `Начинаем обратную подстановку: x[${i + 1}] = b[${i + 1}] = ${векторСвободныхЧленов[i].toFixed(4)}`});
+        for (let j = i + 1; j < n; j++) {
+            x[i] -= матрицаКоэффициентов[i][j] * x[j];
+              steps.push({description: `Вычитаем известные значения x[${j + 1}]: x[${i + 1}] = ${x[i].toFixed(4)}`});
+        }
+        x[i] /= матрицаКоэффициентов[i][i];
+          steps.push({description: `Делим на главный элемент: x[${i + 1}] = ${x[i].toFixed(4)}`});
+    }
+
+    steps.push({description: 'Найдено решение системы:', solution: x});
+    return steps;
+}
+function solveByMatrixMethod(equations) {
+    let steps = [];
+    let n = equations.length;
+
+    // Формируем матрицу коэффициентов A и вектор b
+    let A = equations.map(eq => eq.coeffs.map(el => parseFloat(el)));
+    let b = equations.map(eq => [parseFloat(eq.result)]);
+
+    steps.push({ description: 'Формируем матрицу коэффициентов A:', matrix: A });
+
+    // Вывод вектора b в столбик
+    steps.push({
+        description: 'Формируем вектор свободных членов b:',
+        matrix: b
+    });
+
+
+    try {
+        let Ainv = math.inv(A);
+        steps.push({description: 'Вычисляем обратную матрицу A^-1:', matrix: Ainv});
+        let x = math.multiply(Ainv, b);
+
+        //  Убираем формирование строки решения из этого шага
+        steps.push({description: `Умножаем обратную матрицу A^-1 на вектор b для получения решения.`}); // Убрали \n${solutionString}
+        steps.push({description: 'Решение системы:', solution: x.flat()}); // Решение выводится только на этом шаге
+        return steps;
+
+    } catch (error) {
+        steps.push({description: `Ошибка: ${error.message} (Матрица не имеет обратной). Решение невозможно.`});
+        return steps;
+    }
+}
+document.getElementById('solve-button').addEventListener('click', () => {
+    let equations = [];
+    let eqRows = document.getElementById('equations').getElementsByClassName('equation-row');
+    for (let row of eqRows) {
+        let coeffs = [];
+        let coefInputs = row.getElementsByClassName('coef');
+        let operators = row.getElementsByClassName('operator');
+        let parsedCoeffs = []; // Array of parsed numbers, using the operator to get the sign.
+
+        for (let i = 0; i < coefInputs.length; i++) {
+            let coef = parseFloat(coefInputs[i].value) || 0; // Parse the coefficient
+            if(i > 0){
+                // Use the operator to get the actual number
+                if(operators[i-1].value === "-"){
+                    coef = -coef;
+                }
+            }
+            parsedCoeffs.push(coef); // Append the coefficient
+        }
+
+        let result = parseFloat(row.getElementsByClassName('result')[0].value) || 0;
+        equations.push({coeffs: parsedCoeffs, result, operators: Array.from(operators).map(op => op.value)});
+    }
+    let method = document.getElementById('method').value;
+    let steps = solveEquations(equations, method);
+    displaySteps('steps', steps);
+    calculatorHistory.push({equations, method});
+    localStorage.setItem('calculatorHistory', JSON.stringify(calculatorHistory));
+    displayHistory();
+});
+function displaySteps(containerId, steps) {
+    let container = document.getElementById(containerId);
+    container.innerHTML = '';
+    steps.forEach((step, index) => {
+        let stepDiv = document.createElement('div');
+        stepDiv.className = 'step';
+        let stepTitle = document.createElement('h3');
+        stepTitle.textContent = `Шаг ${index + 1}: ${step.description}`;
+        stepDiv.appendChild(stepTitle);
+        if (step.matrix) {
+            let pre = document.createElement('pre');
+            pre.className = 'matrix';
+            pre.textContent = formatMatrix(step.matrix);
+            stepDiv.appendChild(pre);
+        }
+        if (step.vector) {
+            let pre = document.createElement('pre');
+            pre.textContent = `[\n ${step.vector.map(val => Math.abs(val).toFixed(4)).join(',\n ')}\n]`;
+            stepDiv.appendChild(pre);
+        }
+        if (step.solution) {
+            let solutionDiv = document.createElement('div');
+            step.solution.forEach((value, idx) => {
+                let p = document.createElement('p');
+                if (isNaN(value)) {
+                    let tempidx = idx + 1;
+                    p.textContent = 'для x' + (idx + 1) + ' решения нет';
+                } else {
+                    // Удаляем Math.abs
+                    p.textContent = `x${idx + 1} = ${value.toFixed(4)}`;
+                }
+                solutionDiv.appendChild(p);
+            });
+            stepDiv.appendChild(solutionDiv);
+        }
+        container.appendChild(stepDiv);
+    });
+}
+
+function formatMatrix(matrix) {
+    if (!matrix || matrix.length === 0 || matrix[0].length === 0) {
+        return "Matrix is empty or invalid";
+    }
+    const numRows = matrix.length;
+    const numCols = matrix[0].length;
+    let formattedMatrix = '';
+
+    for (let i = 0; i < numRows; i++) {
+        formattedMatrix += '[';
+        for (let j = 0; j < numCols; j++) {
+            let value = matrix[i][j];
+            //  Используем Math.abs и toFixed(4) для форматирования
+            formattedMatrix += Math.abs(value).toFixed(4);
+            if (j < numCols - 1) {
+                formattedMatrix += ', ';
+            }
+        }
+        formattedMatrix += ']';
+        if (i < numRows - 1) {
+            formattedMatrix += '\n';
+        }
+    }
+
+    return formattedMatrix;
+}
+function formatMatrix(matrix) {
+    return matrix.map(row => row.map(el => el.toFixed(4)).join('\t')).join('\n');
+}
+document.getElementById('generate-system-button').addEventListener('click', generateRandomSystem);
+
+function generateRandomSystem() {
+    let eqCount = document.getElementById('trainer-equations-count').value;
+    let varCount = document.getElementById('trainer-variables-count').value;
+    let eqRows = document.getElementById('trainer-equations').getElementsByClassName('equation-row');
+
+    for (let i = 0; i < eqRows.length; i++) {
+        let row = eqRows[i];
+        let coefInputs = row.getElementsByClassName('coef');
+        let operators = row.getElementsByClassName('operator');
+
+        for (let j = 0; j < varCount; j++) {
+            // Генерируем случайные коэффициенты
+            let randomCoefficient = Math.floor(Math.random() * 20) - 10; // Случайное число от -10 до 9
+            coefInputs[j].value = Math.abs(randomCoefficient); // Вставляем модуль числа, т.к. знак отдельно
+
+            if (j > 0) {
+                // Генерируем случайный оператор
+                let randomOperator = Math.random() < 0.5 ? '+' : '-';
+                operators[j - 1].value = randomOperator;
+            }
+        }
+
+        // Генерируем случайный результат
+        let randomResult = Math.floor(Math.random() * 30) - 15; // Случайное число от -15 до 14
+        row.getElementsByClassName('result')[0].value = randomResult;
+    }
+}
+function displayHistory() {
+    let container = document.getElementById('history');
+    container.innerHTML = '';
+
+    // 1. Получаем историю из localStorage
+    let calculatorHistory = JSON.parse(localStorage.getItem('calculatorHistory') || '[]');
+    let trainerHistory = JSON.parse(localStorage.getItem('trainerHistory') || '[]');
+
+    // 2. Объединяем истории
+    let combinedHistory = [...calculatorHistory, ...trainerHistory];
+
+    if (combinedHistory.length === 0) {
+        // container.textContent = "История пуста.";  // Удаляем эту строку
+        return; // Просто выходим из функции, если история пуста.
+    }
+
+    combinedHistory.forEach((entry, index) => {
+        let item = document.createElement('div');
+        item.className = 'history-item';
+        item.dataset.index = index;
+
+        // 3. Добавляем атрибут, указывающий источник
+        item.dataset.source = index < calculatorHistory.length ? 'calculator' : 'trainer';
+
+
+        // 4. Определяем метод на русском
+        let methodName = entry.method;
+        if (entry.method === "gauss") {
+            methodName = "Гаусса";
+        } else if (entry.method === "kramer") {
+            methodName = "Крамера";
+        } else if (entry.method === "lu") {
+            methodName = "LU - разложение";
+        } else if (entry.method === "minimization") {
+            methodName = "минимизация";
+        } else if (entry.method === "substitution") {
+            methodName = "подстановки";
+        } else if (entry.method === "addition") {
+            methodName = "сложения";
+        } else if (entry.method === "matrix") {
+            methodName = "матричный";
+        }
+        // 5. Отображаем источник
+         let sourceText = index < calculatorHistory.length ? '"Калькулятор"' : '"Тренажер"';
+        let method = document.createElement('p');
+        method.textContent = `Метод ${methodName} ${sourceText}`;  // Убрали ":"
+        item.appendChild(method);
+
+        entry.equations.forEach(eq => {
+            let equationString = '';
+            for (let i = 0; i < eq.coeffs.length; i++) {
+                let coef = eq.coeffs[i];
+                let operator = i > 0 ? eq.operators[i - 1] : '+'; // Предполагаем, что первый оператор всегда "+"
+
+                if (coef < 0) {
+                    // Если коэффициент отрицательный, убираем оператор и используем "-" из коэффициента
+                    equationString += (i > 0 ? ' ' : '') + `${coef}x${i + 1}`;
+                } else {
+                    // Иначе используем оператор и положительный коэффициент
+                    equationString += (i > 0 ? ` ${operator} ` : '') + `${coef}x${i + 1}`;
+                }
+            }
+            equationString += ` = ${eq.result}`;
+
+            let equationParagraph = document.createElement('p');
+            equationParagraph.textContent = equationString;
+            item.appendChild(equationParagraph);
+        });
+
+        item.addEventListener('click', () => {
+            loadHistoryEntry(index);
+        });
+
+        container.appendChild(item);
+    });
+}
+function loadHistoryEntry(index) {
+    let combinedHistory = [...calculatorHistory, ...trainerHistory];
+    let entry = combinedHistory[index];
+
+    let isCalculator = index < calculatorHistory.length; // Определяем, калькулятор это или тренажер
+    let equationsContainerId = isCalculator ? 'equations' : 'trainer-equations';
+    let equationsCountId = isCalculator ? 'equations-count' : 'trainer-equations-count';
+    let variablesCountId = isCalculator ? 'variables-count' : 'trainer-variables-count';
+    let methodId = isCalculator ? 'method' : 'trainer-method';
+
+    document.getElementById(equationsCountId).value = entry.equations.length;
+    document.getElementById(variablesCountId).value = entry.equations[0].coeffs.length;
+    document.getElementById(methodId).value = entry.method;
+
+    generateEquations(equationsContainerId, equationsCountId, variablesCountId);
+
+    let eqRows = document.getElementById(equationsContainerId).getElementsByClassName('equation-row');
+    for (let i = 0; i < eqRows.length; i++) {
+        let row = eqRows[i];
+        let coefInputs = row.getElementsByClassName('coef');
+        let operators = row.getElementsByClassName('operator');
+        let equation = entry.equations[i];
+
+        for (let j = 0; j < coefInputs.length; j++) {
+            coefInputs[j].value = equation.coeffs[j];
+
+            if (j > 0) {
+                // Определяем оператор на основе знака коэффициента
+                if (equation.coeffs[j] < 0) {
+                    operators[j - 1].value = '-';
+                    coefInputs[j].value = Math.abs(equation.coeffs[j]); // Убираем знак минус из поля ввода
+                } else {
+                    operators[j - 1].value = equation.operators[j - 1] || '+'; // Используем сохраненный оператор или "+" по умолчанию
+                }
+            }
+        }
+        row.getElementsByClassName('result')[0].value = equation.result;
+    }
+}
+displayHistory();
+document.getElementById('clear-history-button').addEventListener('click', () => {
+    calculatorHistory = [];
+    trainerHistory = [];
+    localStorage.setItem('calculatorHistory', JSON.stringify(calculatorHistory));
+    localStorage.setItem('trainerHistory', JSON.stringify(trainerHistory));
+    displayHistory();
+});
+function generateTrainerEquations() {
+    generateEquations('trainer-equations', 'trainer-equations-count', 'trainer-variables-count');
+}
+generateTrainerEquations();
+document.getElementById('trainer-equations-count').addEventListener('change', generateTrainerEquations);
+document.getElementById('trainer-variables-count').addEventListener('change', generateTrainerEquations);
+document.getElementById('start-trainer-button').addEventListener('click', () => {
+    //  Получаем данные уравнений из полей ввода тренажера
+    let equations = [];
+    let eqRows = document.getElementById('trainer-equations').getElementsByClassName('equation-row');
+    for (let row of eqRows) {
+        let coeffs = [];
+        let coefInputs = row.getElementsByClassName('coef');
+        let operators = row.getElementsByClassName('operator');
+        for (let i = 0; i < coefInputs.length; i++) {
+            let coef = parseFloat(coefInputs[i].value) || 0;
+            // Если это не первый коэффициент, учитываем оператор
+            if (i > 0) {
+                let operator = operators[i - 1].value;
+                if (operator === '-') {
+                    coef = -coef; // Меняем знак, если оператор минус
+                }
+            }
+            coeffs.push(coef);
+        }
+        let result = parseFloat(row.getElementsByClassName('result')[0].value) || 0;
+        equations.push({coeffs, result, operators: Array.from(operators).map(op => op.value)});
+    }
+
+    // Получаем выбранный метод из select-а тренажера
+    let method = document.getElementById('trainer-method').value; // Получаем значение из select
+
+    trainerHistory.push({equations, method});
+    localStorage.setItem('trainerHistory', JSON.stringify(trainerHistory));
+    displayHistory();
+
+    startTrainer(equations, method); // <----  ДОБАВЬТЕ ЭТУ СТРОКУ!!!
+});
+let trainerSteps = [];
+let currentTrainerStep = 0;
+let trainerInputValues = {};
+function startTrainer(equations, method) {
+    trainerSteps = solveEquations(equations, method);
+    currentTrainerStep = 0;
+    trainerInputValues = {};
+    showTrainerStep();
+}
+function showTrainerStep() {
+    let trainerStepsDiv = document.getElementById('trainer-steps');
+    trainerStepsDiv.innerHTML = '';
+    if (currentTrainerStep < 0) currentTrainerStep = 0;
+    if (currentTrainerStep >= trainerSteps.length) currentTrainerStep = trainerSteps.length - 1;
+    let step = trainerSteps[currentTrainerStep];
+    let stepDiv = document.createElement('div');
+    stepDiv.className = 'step';
+    let stepTitle = document.createElement('h3');
+    stepTitle.textContent = `Шаг ${currentTrainerStep + 1}: ${step.description}`;
+    stepDiv.appendChild(stepTitle);
+    if (step.matrix) {
+        let inputMatrix = document.createElement('div');
+        inputMatrix.className = 'matrix-input';
+        step.matrix.forEach((row, i) => {
+            row.forEach((_, j) => {
+                let input = document.createElement('input');
+                input.type = 'number';
+                input.dataset.i = i;
+                input.dataset.j = j;
+                input.style.width = '60px';
+                input.style.margin = '2px';
+                input.className = 'trainer-input';
+                let inputKey = `step_${currentTrainerStep}_matrix_${i}_${j}`;
+                if (trainerInputValues[inputKey] !== undefined) {
+                    input.value = trainerInputValues[inputKey];
+                }
+                input.addEventListener('input', () => {
+                    trainerInputValues[inputKey] = input.value;
+                });
+                inputMatrix.appendChild(input);
+            });
+            inputMatrix.appendChild(document.createElement('br'));
+        });
+        stepDiv.appendChild(inputMatrix);
+        let checkButton = document.createElement('button');
+        checkButton.textContent = 'Проверить';
+        stepDiv.appendChild(checkButton);
+        let feedback = document.createElement('p');
+        feedback.style.marginTop = '10px';
+        stepDiv.appendChild(feedback);
+        checkButton.addEventListener('click', () => {
+            let inputs = inputMatrix.getElementsByTagName('input');
+            let allCorrect = true;
+            for (let input of inputs) {
+                let i = input.dataset.i;
+                let j = input.dataset.j;
+                let value = parseFloat(input.value);
+                //  Форматируем step.matrix[i][j] перед сравнением
+                let expectedValue = parseFloat(step.matrix[i][j].toFixed(4));
+
+                if (input.value === '' || isNaN(value) || Math.abs(value - expectedValue) > 0.0001) {
+                    allCorrect = false;
+                    input.classList.add('input-error');
+                    input.classList.remove('input-correct');
+                } else {
+                    input.classList.add('input-correct');
+                    input.classList.remove('input-error');
+                }
+            }
+            if (allCorrect) {
+                feedback.textContent = 'Верно!';
+            } else {
+                feedback.textContent = 'Есть ошибки, исправьте их.';
+            }
+        });
+    } else if (step.solution) {
+        let inputSolution = document.createElement('div');
+        step.solution.forEach((_, idx) => {
+            let label = document.createElement('label');
+            label.textContent = `x${idx + 1} = `;
+            let input = document.createElement('input');
+            input.type = 'number';
+            input.dataset.idx = idx;
+            input.style.width = '60px';
+            input.style.margin = '5px 0';
+            input.className = 'trainer-input';
+            let inputKey = `step_${currentTrainerStep}_solution_${idx}`;
+            if (trainerInputValues[inputKey] !== undefined) {
+                input.value = trainerInputValues[inputKey];
+            }
+            input.addEventListener('input', () => {
+                trainerInputValues[inputKey] = input.value;
+            });
+            inputSolution.appendChild(label);
+            inputSolution.appendChild(input);
+            inputSolution.appendChild(document.createElement('br'));
+        });
+        stepDiv.appendChild(inputSolution);
+        let checkButton = document.createElement('button');
+        checkButton.textContent = 'Проверить';
+        stepDiv.appendChild(checkButton);
+        let feedback = document.createElement('p');
+        feedback.style.marginTop = '10px';
+        stepDiv.appendChild(feedback);
+        checkButton.addEventListener('click', () => {
+            let inputs = inputSolution.getElementsByTagName('input');
+            let allCorrect = true;
+            for (let input of inputs) {
+                let idx = input.dataset.idx;
+                let value = parseFloat(input.value);
+                if (input.value === '' || isNaN(value) || Math.abs(value - step.solution[idx]) > 0.0001) {
+                    allCorrect = false;
+                    input.classList.add('input-error');
+                    input.classList.remove('input-correct');
+                } else {
+                    input.classList.add('input-correct');
+                    input.classList.remove('input-error');
+                }
+            }
+            if (allCorrect) {
+                trainerStepsDiv.innerHTML = '<h3 style="color: #ffdd57; text-align:center;">Система линейных уравнений решена успешно</h3>';
+            } else {
+                feedback.textContent = 'Есть ошибки, исправьте их.';
+            }
+        });
+    } else {
+        stepDiv.appendChild(document.createTextNode('Нет данных для отображения.'));
+    }
+    trainerStepsDiv.appendChild(stepDiv);
+}
+document.getElementById('prev-step-button').addEventListener('click', () => {
+    currentTrainerStep--;
+    showTrainerStep();
+});
+document.getElementById('next-step-button').addEventListener('click', () => {
+    currentTrainerStep++;
+    showTrainerStep();
+});
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+}
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+</script>
+</body>
+</html>
